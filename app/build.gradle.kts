@@ -82,6 +82,10 @@ dependencies {
     implementation(libs.lifecycle.runtime.compose)
     implementation(libs.lifecycle.viewmodel.compose)
 
+
+    // app/build.gradle.kts → dependencies (no lleva versión, la toma del Compose BOM)
+    implementation(libs.androidx.compose.material.icons.extended)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
