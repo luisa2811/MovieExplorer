@@ -1,2 +1,2 @@
 # MovieExplorer
-App Android en Jetpack Compose que consume la API de TMDB con Retrofit, Hilt y Paging 3: búsqueda, filtros, detalle de películas y scroll infinito.
+MovieExplorer es una aplicación Android que permite explorar el catálogo de películas de The Movie Database (TMDB). Muestra una lista de películas populares con scroll infinito, permite buscarlas por título y filtrarlas por género, y ofrece una pantalla de detalle con sinopsis, calificación, duración y géneros. Incluye un indicador del estado de conexión y manejo de errores de red. Está construida con Kotlin, Jetpack Compose, Retrofit, Hilt y Paging 3, siguiendo una arquitectura en capas (UI, ViewModel, Repository, Domain y Data).
