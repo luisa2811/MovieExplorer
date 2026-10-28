@@ -5,8 +5,7 @@ import androidx.paging.PagingState
 import com.movieexplorer.data.remote.dto.MovieResponseDto
 import com.movieexplorer.data.remote.mapper.toDomain
 import com.movieexplorer.domain.model.Movie
-import retrofit2.HttpException
-import java.io.IOException
+import kotlinx.coroutines.CancellationException
 
 class MoviePagingSource(
     private val fetchMovies: suspend (page: Int) -> MovieResponseDto
@@ -37,9 +36,9 @@ class MoviePagingSource(
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = nextKey
             )
-        } catch (e: IOException) {
-            LoadResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }

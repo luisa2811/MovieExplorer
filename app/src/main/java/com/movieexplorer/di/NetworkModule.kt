@@ -1,12 +1,13 @@
 package com.movieexplorer.di
 
+import android.util.Log
 import com.movieexplorer.BuildConfig
+import com.movieexplorer.data.remote.ApiKeyInterceptor
 import com.movieexplorer.data.remote.TmdbApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,30 +23,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiKeyAndLanguageInterceptor(): Interceptor {
-        return Interceptor { chain ->
-            val originalRequest = chain.request()
-            val originalUrl = originalRequest.url
-
-            val newUrl = originalUrl.newBuilder()
-                .addQueryParameter("api_key", BuildConfig.TMDB_API_KEY)
-                .addQueryParameter("language", "es-ES")
-                .build()
-
-            val newRequest = originalRequest.newBuilder()
-                .url(newUrl)
-                .build()
-
-            chain.proceed(newRequest)
-        }
-    }
-
-    @Provides
-    @Singleton
     fun provideOkHttpClient(
-        apiKeyInterceptor: Interceptor
+        apiKeyInterceptor: ApiKeyInterceptor
     ): OkHttpClient {
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
+        val loggingInterceptor = HttpLoggingInterceptor { message ->
+            val sanitizedMessage = message.replace(Regex("api_key=[^&\\s]+"), "api_key=***")
+            Log.d("OkHttp", sanitizedMessage)
+        }.apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
             } else {
