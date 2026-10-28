@@ -93,3 +93,11 @@ Para validar el funcionamiento, se incluyeron dos composables marcados con `// T
 - `DebugDetailScreen.kt`
 
 Puedes reemplazarlos por los composables definitivos respetando la estructura de ViewModels expuesta.
+
+---
+
+## 7. Recomendaciones para la UI
+- **Claves duplicadas en Paging**: TMDB puede devolver la misma película en páginas distintas. En el `LazyColumn`, la `key` debe combinar el `id` con el índice (por ejemplo: `key = { index -> val movie = moviesPagingItems.peek(index); if (movie != null) "${movie.id}_$index" else index }`, tal como en `DebugListScreen`) para evitar crash por claves duplicadas.
+- **Ciclo de vida en Compose**: Usar `collectAsStateWithLifecycle()` en lugar de `collectAsState()` para observar los StateFlows respetando el ciclo de vida de los Composable.
+- **Manejo de Lista Vacía**: Cuando `loadState.refresh` sea `NotLoading` y `itemCount == 0`, mostrar un mensaje amigable al usuario como *"No se encontraron películas"*.
+- **Mockups de referencia**: Si existen archivos de diseño en `docs/mockups/`, usarlos como referencia visual previa para la construcción de los componentes finales.

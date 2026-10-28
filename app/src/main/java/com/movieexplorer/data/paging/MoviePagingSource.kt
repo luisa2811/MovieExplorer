@@ -38,7 +38,7 @@ class MoviePagingSource(
             )
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Throwable) {
+        } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
