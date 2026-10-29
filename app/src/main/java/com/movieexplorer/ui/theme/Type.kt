@@ -1,34 +1,24 @@
 package com.movieexplorer.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+private val defaultTypography = Typography()
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    displayLarge = defaultTypography.displayLarge.copy(fontWeight = FontWeight.Bold),
+    displayMedium = defaultTypography.displayMedium.copy(fontWeight = FontWeight.Bold),
+    displaySmall = defaultTypography.displaySmall.copy(fontWeight = FontWeight.Bold),
+    headlineLarge = defaultTypography.headlineLarge.copy(fontWeight = FontWeight.Bold),
+    headlineMedium = defaultTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+    headlineSmall = defaultTypography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+    titleLarge = defaultTypography.titleLarge.copy(fontWeight = FontWeight.Bold),
+    titleMedium = defaultTypography.titleMedium.copy(fontWeight = FontWeight.Bold),
+    titleSmall = defaultTypography.titleSmall.copy(fontWeight = FontWeight.Bold),
+    bodyLarge = defaultTypography.bodyLarge,
+    bodyMedium = defaultTypography.bodyMedium,
+    bodySmall = defaultTypography.bodySmall,
+    labelLarge = defaultTypography.labelLarge,
+    labelMedium = defaultTypography.labelMedium,
+    labelSmall = defaultTypography.labelSmall
 )
