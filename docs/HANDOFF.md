@@ -1,6 +1,6 @@
 # Guía de Entrega y Documentación para el Desarrollo de UI - MovieExplorer
 
-¡Hola! Esta documentación resume la arquitectura, los ViewModels, el flujo de datos y la navegación del proyecto **MovieExplorer** para que puedas implementar la interfaz gráfica final de manera fluida y sin contratiempos.
+Esta documentación resume la arquitectura, la estructura de la UI, los ViewModels, el flujo de datos y la navegación del proyecto **MovieExplorer**.
 
 ---
 
@@ -23,13 +23,33 @@ El archivo `local.properties` está ignorado en Git para proteger la clave.
 
 ## 3. Navegación (`ui/navigation/Routes.kt`)
 La navegación se gestiona centralizadamente mediante el objeto `Routes`:
-- `Routes.LIST` (`"list"`): Pantalla principal de catálogo de películas.
-- `Routes.DETAIL` (`"detail/{movieId}"`): Pantalla de detalle.
+- `Routes.LIST` (`"list"`): Pantalla principal de catálogo de películas (`MovieListScreen`).
+- `Routes.DETAIL` (`"detail/{movieId}"`): Pantalla de detalle de película (`MovieDetailScreen`).
 - `Routes.detail(movieId: Int)`: Función auxiliar para construir la ruta hacia el detalle de una película específica.
 
 ---
 
-## 4. ViewModels y Estado de la UI
+## 4. Estructura de la UI
+
+### Pantallas Principales
+- **`MovieListScreen`** (`ui/list/MovieListScreen.kt`):
+  Pantalla principal que muestra el catálogo paginado de películas populares, búsqueda por título y filtrado por género. Incluye la barra superior `TopAppBar`, el banner de estado offline `OfflineBanner`, el buscador `SearchBar`, los chips de género `GenreChips`, y el manejo de estados de paginación con `MovieCard`, `LoadingFooter`, `ErrorState` y `EmptyState`.
+- **`MovieDetailScreen`** (`ui/detail/MovieDetailScreen.kt`):
+  Pantalla de detalle que muestra la imagen de fondo (backdrop) con degradado, botón único de retorno con insets de barra de estado, póster superpuesto, título, frase emblemática (tagline), fila envolvente de información (calificación, recuento de votos, duración y año), chips de géneros y tarjeta con la sinopsis desplegable ("Leer más" / "Leer menos").
+
+### Componentes Reutilizables (`ui/components/`)
+- **`MovieCard`**: Tarjeta horizontal para cada película en la lista con póster, título, año, sinopsis e insignia de calificación.
+- **`OfflineBanner`**: Banner animado con advertencia de falta de conexión a internet.
+- **`SearchBar`**: Campo de búsqueda redondeado con ícono de lupa y botón para borrar texto.
+- **`GenreChips`**: Fila desplazable de chips para filtrado por género con la opción "Todos".
+- **`ErrorState`**: Vista de error centrada con ícono en círculo oscuro, título, mensaje y botón "Reintentar".
+- **`EmptyState`**: Vista centrada cuando no se encuentran resultados.
+- **`LoadingFooter`**: Indicador de carga paginada al final de la lista con texto informativo.
+- **`Formatters.kt`**: Funciones auxiliares para formatear duración (`formatRuntime`), recuento de votos corto (`formatVotes`) y año (`extractYear`).
+
+---
+
+## 5. ViewModels y Estado de la UI
 
 ### A. `MovieListViewModel` (`com.movieexplorer.ui.list.MovieListViewModel`)
 Inyectado automáticamente con Hilt via `@HiltViewModel`.
@@ -53,14 +73,6 @@ Inyectado automáticamente con Hilt via `@HiltViewModel`.
 - Si el usuario selecciona un género (`onGenreSelected(genre)`), la búsqueda se borra a `""` y se filtra por ese género. Seleccionar el mismo género de nuevo lo deselecciona.
 - Si ambos están vacíos/nulos, el flujo retorna automáticamente las películas populares.
 
-#### Métodos de Interacción:
-- `onQueryChange(text: String)`: Llama a esta función al cambiar el texto del buscador.
-- `onGenreSelected(genre: Genre?)`: Llama a esta función al presionar un *chip* de género.
-- `retryGenres()`: Reintenta cargar la lista de géneros si ocurrió un error en `genresError`.
-
-#### Manejo del Estado Offline en Paging 3:
-Cuando `isOnline` cambie de `false` a `true`, puedes reintentar automáticamente la paginación llamando a `lazyPagingItems.retry()` en la UI.
-
 ---
 
 ### B. `MovieDetailViewModel` (`com.movieexplorer.ui.detail.MovieDetailViewModel`)
@@ -72,32 +84,12 @@ Inyectado automáticamente con Hilt via `@HiltViewModel`. Lee automáticamente e
   - `DetailUiState.Success(val detail: MovieDetail)`: Detalle cargado con éxito.
   - `DetailUiState.Error(val message: String)`: Mensaje de error formateado en español.
 
-#### Métodos de Interacción:
-- `retry()`: Reintenta la carga del detalle de la película en caso de fallo.
-
 ---
 
-## 5. Mapeo de Mensajes de Error (`util/ErrorMapper.kt`)
+## 6. Mapeo de Mensajes de Error (`util/ErrorMapper.kt`)
 Cualquier error devuelto por la API o el repositorio se mapea a mensajes claros para el usuario final en español mediante `toUserMessage()`:
 - Sin red -> *"Sin conexión a internet. Revisa tu red e inténtalo de nuevo."*
 - Error 401 -> *"Error de autenticación con la API."*
 - Error 404 -> *"No se encontró la información solicitada."*
 - Otro error HTTP -> *"Error del servidor (código X)."*
 - Otro error -> *"Ocurrió un error inesperado."*
-
----
-
-## 6. Pantallas de Prueba Temporales
-Para validar el funcionamiento, se incluyeron dos composables marcados con `// TEMPORAL: será reemplazada por la UI final`:
-- `DebugListScreen.kt`
-- `DebugDetailScreen.kt`
-
-Puedes reemplazarlos por los composables definitivos respetando la estructura de ViewModels expuesta.
-
----
-
-## 7. Recomendaciones para la UI
-- **Claves duplicadas en Paging**: TMDB puede devolver la misma película en páginas distintas. En el `LazyColumn`, la `key` debe combinar el `id` con el índice (por ejemplo: `key = { index -> val movie = moviesPagingItems.peek(index); if (movie != null) "${movie.id}_$index" else index }`, tal como en `DebugListScreen`) para evitar crash por claves duplicadas.
-- **Ciclo de vida en Compose**: Usar `collectAsStateWithLifecycle()` en lugar de `collectAsState()` para observar los StateFlows respetando el ciclo de vida de los Composable.
-- **Manejo de Lista Vacía**: Cuando `loadState.refresh` sea `NotLoading` y `itemCount == 0`, mostrar un mensaje amigable al usuario como *"No se encontraron películas"*.
-- **Mockups de referencia**: Si existen archivos de diseño en `docs/mockups/`, usarlos como referencia visual previa para la construcción de los componentes finales.

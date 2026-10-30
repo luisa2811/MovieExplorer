@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -77,6 +79,7 @@ fun MovieDetailScreen(
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MovieDetailContent(
     uiState: DetailUiState,
@@ -106,7 +109,7 @@ fun MovieDetailContent(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    // Backdrop Image & Single Back Button
+                    // Backdrop Image
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -141,24 +144,6 @@ fun MovieDetailContent(
                                     )
                                 )
                         )
-
-                        // Single Back button
-                        IconButton(
-                            onClick = onBackClick,
-                            modifier = Modifier
-                                .statusBarsPadding()
-                                .padding(16.dp)
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(Color.Black.copy(alpha = 0.5f))
-                                .align(Alignment.TopStart)
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Volver",
-                                tint = Color.White
-                            )
-                        }
                     }
 
                     // Header Row: Poster overlapping Backdrop + Title & Tagline
@@ -231,13 +216,13 @@ fun MovieDetailContent(
                             .offset(y = (-24).dp)
                             .padding(bottom = 24.dp)
                     ) {
-                        // Info chips row
-                        Row(
+                        // Info chips row using FlowRow
+                        FlowRow(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp, vertical = 8.dp),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             // Rating
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -394,6 +379,24 @@ fun MovieDetailContent(
                     }
                 }
             }
+        }
+
+        // Single Back button present in ALL states (Loading, Error, Success)
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier
+                .statusBarsPadding()
+                .padding(16.dp)
+                .size(40.dp)
+                .clip(CircleShape)
+                .background(Color.Black.copy(alpha = 0.5f))
+                .align(Alignment.TopStart)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Volver",
+                tint = Color.White
+            )
         }
     }
 }
