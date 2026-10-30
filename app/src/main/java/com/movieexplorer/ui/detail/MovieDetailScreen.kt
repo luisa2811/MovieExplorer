@@ -27,9 +27,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.ui.res.painterResource
+import com.movieexplorer.R
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -175,9 +176,9 @@ fun MovieDetailContent(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.Movie,
+                                    painter = painterResource(id = R.drawable.ic_movie_explorer_symbol),
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.outline,
+                                    tint = Color.Unspecified,
                                     modifier = Modifier.size(36.dp)
                                 )
                             }

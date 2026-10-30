@@ -42,6 +42,9 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import com.movieexplorer.R
 import com.movieexplorer.domain.model.Genre
 import com.movieexplorer.domain.model.Movie
 import com.movieexplorer.ui.components.EmptyState
@@ -111,10 +114,10 @@ fun MovieListContent(
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = Icons.Default.Movie,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(28.dp)
+                            painter = painterResource(id = R.drawable.ic_movie_explorer_symbol),
+                            contentDescription = "MovieExplorer Logo",
+                            tint = Color.Unspecified,
+                            modifier = Modifier.size(32.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
