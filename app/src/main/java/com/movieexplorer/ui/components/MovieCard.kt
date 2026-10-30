@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.filled.Star
@@ -19,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,6 +43,8 @@ fun MovieCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val posterShape = RoundedCornerShape(10.dp)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -65,14 +69,14 @@ fun MovieCard(
                     modifier = Modifier
                         .width(80.dp)
                         .height(120.dp)
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(posterShape)
                 )
             } else {
                 Box(
                     modifier = Modifier
                         .width(80.dp)
                         .height(120.dp)
-                        .clip(MaterialTheme.shapes.small)
+                        .clip(posterShape)
                         .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
@@ -91,7 +95,7 @@ fun MovieCard(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                // Top row: Title and Rating
+                // Top row: Title and Rating Badge
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -108,23 +112,29 @@ fun MovieCard(
 
                     Spacer(modifier = Modifier.width(8.dp))
 
-                    // Rating badge
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
+                    // Rating badge in surfaceVariant pill
+                    Surface(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(2.dp))
-                        Text(
-                            text = String.format(Locale.US, "%.1f", movie.rating),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                        Row(
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Star,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(14.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = String.format(Locale.US, "%.1f", movie.rating),
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 }
 

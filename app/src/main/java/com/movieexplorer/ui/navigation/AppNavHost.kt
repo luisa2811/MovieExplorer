@@ -10,8 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.movieexplorer.ui.detail.DebugDetailScreen
 import com.movieexplorer.ui.detail.MovieDetailViewModel
-import com.movieexplorer.ui.list.DebugListScreen
-import com.movieexplorer.ui.list.MovieListViewModel
+import com.movieexplorer.ui.list.MovieListScreen
 
 @Composable
 fun AppNavHost(
@@ -22,9 +21,7 @@ fun AppNavHost(
         startDestination = Routes.LIST
     ) {
         composable(Routes.LIST) {
-            val viewModel: MovieListViewModel = hiltViewModel()
-            DebugListScreen(
-                viewModel = viewModel,
+            MovieListScreen(
                 onMovieClick = { movieId ->
                     navController.navigate(Routes.detail(movieId))
                 }

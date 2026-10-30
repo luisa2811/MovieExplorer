@@ -40,6 +40,22 @@ object SampleData {
             posterUrl = "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBv9B.jpg",
             releaseDate = "2014-11-05",
             rating = 8.44
+        ),
+        Movie(
+            id = 12345,
+            title = "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb",
+            overview = "Un general lunático desencadena un camino hacia el holocausto nuclear que una sala de guerra llena de políticos e ingenieros intenta desesperadamente detener.",
+            posterUrl = "https://image.tmdb.org/t/p/w500/AAnO2mIe2Q4D2bS.jpg",
+            releaseDate = "1964-01-29",
+            rating = 8.5
+        ),
+        Movie(
+            id = 67890,
+            title = "Película Sin Póster Ni Sinopsis",
+            overview = "",
+            posterUrl = null,
+            releaseDate = "2024-05-10",
+            rating = 6.2
         )
     )
 

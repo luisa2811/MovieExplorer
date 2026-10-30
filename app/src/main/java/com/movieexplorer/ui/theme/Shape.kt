@@ -13,5 +13,5 @@ val Shapes = Shapes(
     small = FullyRoundedShape,
     medium = CardShape,
     large = CardShape,
-    extraLarge = FullyRoundedShape
+    extraLarge = RoundedCornerShape(28.dp)
 )
