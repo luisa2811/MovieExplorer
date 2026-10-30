@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -195,61 +196,92 @@ fun MovieListContent(
                         EmptyState(message = "Intenta con otro título o género.")
                     }
                     else -> {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(
-                                count = moviesPagingItems.itemCount,
-                                key = { index ->
-                                    val movie = moviesPagingItems.peek(index)
-                                    if (movie != null) "${movie.id}_$index" else index
-                                }
-                            ) { index ->
-                                val movie = moviesPagingItems[index]
-                                if (movie != null) {
-                                    MovieCard(
-                                        movie = movie,
-                                        onClick = { onMovieClick(movie.id) }
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            // Indicador de recarga cuando ya existen items
+                            if (refreshState is LoadState.Loading) {
+                                LinearProgressIndicator(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(3.dp),
+                                    color = MaterialTheme.colorScheme.primary,
+                                    trackColor = MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            } else if (refreshState is LoadState.Error) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = refreshState.error.toUserMessage(),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.weight(1f)
                                     )
+                                    TextButton(onClick = { moviesPagingItems.retry() }) {
+                                        Text("Reintentar", color = MaterialTheme.colorScheme.primary)
+                                    }
                                 }
                             }
 
-                            when (val appendState = moviesPagingItems.loadState.append) {
-                                is LoadState.Loading -> {
-                                    item {
-                                        LoadingFooter()
+                            LazyColumn(
+                                modifier = Modifier.fillMaxSize(),
+                                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                                verticalArrangement = Arrangement.spacedBy(12.dp)
+                            ) {
+                                items(
+                                    count = moviesPagingItems.itemCount,
+                                    key = { index ->
+                                        val movie = moviesPagingItems.peek(index)
+                                        if (movie != null) "${movie.id}_$index" else index
+                                    }
+                                ) { index ->
+                                    val movie = moviesPagingItems[index]
+                                    if (movie != null) {
+                                        MovieCard(
+                                            movie = movie,
+                                            onClick = { onMovieClick(movie.id) }
+                                        )
                                     }
                                 }
-                                is LoadState.Error -> {
-                                    item {
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(16.dp),
-                                            horizontalAlignment = Alignment.CenterHorizontally
-                                        ) {
-                                            Text(
-                                                text = appendState.error.toUserMessage(),
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                color = MaterialTheme.colorScheme.error
-                                            )
-                                            Spacer(modifier = Modifier.height(8.dp))
-                                            Button(
-                                                onClick = { moviesPagingItems.retry() },
-                                                shape = CircleShape,
-                                                colors = ButtonDefaults.buttonColors(
-                                                    containerColor = MaterialTheme.colorScheme.primary,
-                                                    contentColor = MaterialTheme.colorScheme.onPrimary
-                                                )
+
+                                when (val appendState = moviesPagingItems.loadState.append) {
+                                    is LoadState.Loading -> {
+                                        item {
+                                            LoadingFooter()
+                                        }
+                                    }
+                                    is LoadState.Error -> {
+                                        item {
+                                            Column(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(16.dp),
+                                                horizontalAlignment = Alignment.CenterHorizontally
                                             ) {
-                                                Text("Reintentar")
+                                                Text(
+                                                    text = appendState.error.toUserMessage(),
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    color = MaterialTheme.colorScheme.error
+                                                )
+                                                Spacer(modifier = Modifier.height(8.dp))
+                                                Button(
+                                                    onClick = { moviesPagingItems.retry() },
+                                                    shape = CircleShape,
+                                                    colors = ButtonDefaults.buttonColors(
+                                                        containerColor = MaterialTheme.colorScheme.primary,
+                                                        contentColor = MaterialTheme.colorScheme.onPrimary
+                                                    )
+                                                ) {
+                                                    Text("Reintentar")
+                                                }
                                             }
                                         }
                                     }
+                                    else -> {}
                                 }
-                                else -> {}
                             }
                         }
                     }
